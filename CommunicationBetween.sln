@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationBetween", "CommunicationBetween\CommunicationBetween.csproj", "{7D30E49E-233B-40EA-A5E8-B3C18D881949}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationBetween", "CommunicationBetween\CommunicationBetween.csproj", "{7D30E49E-233B-40EA-A5E8-B3C18D881949}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{4D99D6D7-37EC-4DC1-B1FE-8180969B270A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{4D99D6D7-37EC-4DC1-B1FE-8180969B270A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{973C8D01-B048-4005-ABBF-5D43D293ECCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{973C8D01-B048-4005-ABBF-5D43D293ECCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

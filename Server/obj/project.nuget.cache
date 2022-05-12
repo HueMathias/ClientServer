@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "fuCZHb4V0vvZ3gzrWRQ/xQnsYswm8XOxUw2XxQwrO3eCYfx8td+kdiWyMp+iLBqyUUhLJktg33IckEjou7dDHA==",
+  "dgSpecHash": "xE923l3FT1uXHC99KDS5Sdn5HhifPnjU4B1HSGMH+rN9lIWpLzb5mJMn8pAC3WU6/vjy+i3Ad3+jLRlu7u7f7g==",
   "success": true,
   "projectFilePath": "C:\\Users\\M.HUE\\source\\repos\\ClientServer\\Server\\Server.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\M.HUE\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
   "logs": []
 }

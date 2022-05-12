@@ -40,3 +40,4 @@ C:\Users\M.HUE\source\repos\ClientServer\Server\obj\Debug\net6.0\refint\Server.d
 C:\Users\M.HUE\source\repos\ClientServer\Server\obj\Debug\net6.0\Server.pdb
 C:\Users\M.HUE\source\repos\ClientServer\Server\obj\Debug\net6.0\Server.genruntimeconfig.cache
 C:\Users\M.HUE\source\repos\ClientServer\Server\obj\Debug\net6.0\ref\Server.dll
+C:\Users\M.HUE\source\repos\ClientServer\Server\bin\Debug\net6.0\Newtonsoft.Json.dll

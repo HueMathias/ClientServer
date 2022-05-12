@@ -1,4 +1,4 @@
-﻿using System;
+﻿global using Newtonsoft.Json;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -115,11 +115,60 @@ public class SocketClient
 
         socket.Connect(endPoint);
 
+        //Reçoit OK
+        Reception(socket);
+
+        //Envoi IP
+        string ipString = ip.MapToIPv4().ToString();
+        Send(socket, ipString);
+
+        string account = Reception(socket);
+        if (account == "KO")
+        {
+            Console.WriteLine("Saisir votre nom :");
+            string? name = Console.ReadLine();
+            SendPersonne(socket, name);
+
+            Reception(socket);
+            Console.ReadLine();
+        }
+        else
+        {
+            CommunicationBetween.Personne me = JsonConvert.DeserializeObject<CommunicationBetween.Personne>(account);
+            Console.WriteLine("Vous êtes connecté : \n" + me.name + "\n" + me.age + "\n" + me.id);
+            Send(socket, "OK");
+
+        }
+        
+    }
+    
+    public static string Reception(Socket socket)
+    {
         byte[] buffer = new byte[1024];
         int length = socket.Receive(buffer);
         string resp = Encoding.ASCII.GetString(buffer, 0, length);
         Console.WriteLine(resp);
-        Console.ReadLine();
+        return resp;
     }
+
+    public static void SendPersonne(Socket client, string name = "")
+    {
+        string host = Dns.GetHostName();
+        IPHostEntry ipHost = Dns.GetHostEntry(host);
+        IPAddress ipAddress = ipHost.AddressList[1];
+        string ip = ipAddress.MapToIPv4().ToString();
+
+        CommunicationBetween.Personne me = new(20, name, ip);
+        string json = JsonConvert.SerializeObject(me);
+        byte[] msg = Encoding.ASCII.GetBytes(json);
         
+        client.Send(msg);
+    }
+
+    public static void Send(Socket client, string txt)
+    {
+        byte[] msg = Encoding.ASCII.GetBytes(txt);
+        client.Send(msg);
+    }
+
 }

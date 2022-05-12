@@ -8,7 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CommunicationBetween\CommunicationBetween.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Ressources\" />
   </ItemGroup>
 
 </Project>

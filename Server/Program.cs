@@ -1,6 +1,8 @@
-﻿using System.Net;
+﻿using Newtonsoft.Json;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
+
 
 namespace Server;
 
@@ -76,6 +78,8 @@ public class Server
 
     private static IPAddress ip = new IPAddress(new byte[] { 127, 0, 0, 1 });
     private static Socket listener;
+
+    public static Dictionary<int, CommunicationBetween.Personne> people = new();
     public static void Start()
     {
         IPEndPoint endPoint = new IPEndPoint(ip, 1234);
@@ -84,6 +88,7 @@ public class Server
         listener.Listen(6);
 
         Console.WriteLine("Server start");
+        LoadJsonFile();
         while (true)
         {
             Socket client = listener.Accept();
@@ -93,6 +98,50 @@ public class Server
             {
                 SendOK(client);
 
+                bool exist = false;
+                CommunicationBetween.Personne theClient = new();
+                //Regarde dans fichier json si client existe déjà
+                //Récupère ip 
+                string ip = Get(client);
+
+                foreach (var personne in people)
+                {
+                    if (personne.Value.ip.ToString() == ip)
+                    {
+                        exist = true;
+                        theClient = personne.Value;
+                    }
+                        
+                }
+
+                //si oui => envoi ses infos
+                if (exist)
+                {
+                    SendClient(client, theClient);                    
+                }
+                else
+                {
+                    //sinon => demande ses infos et on enregistre dans dictionnaire
+                    SendKO(client);
+                }
+
+                string connect = Get(client);
+                if (connect != "OK")
+                {
+                    string json = JsonConvert.SerializeObject(people);
+                    CommunicationBetween.Personne newClient = JsonConvert.DeserializeObject<CommunicationBetween.Personne>(connect);
+
+                    Random aleatoire = new Random();
+                    int entier = aleatoire.Next(1, 9999);
+
+                    int id = entier * 1024;
+                    newClient.id = id;
+                    people.Add(newClient.id, newClient);
+
+                    SaveDictionary(JsonConvert.SerializeObject(people));
+                    Console.WriteLine("Client sauvegardé");
+                    SendOK(client);
+                }
             });
             thread.Start();
         }
@@ -104,6 +153,72 @@ public class Server
         client.Send(msg);
     }
 
+    public static void SendKO(Socket client)
+    {
+        byte[] msg = Encoding.ASCII.GetBytes("KO");
+        client.Send(msg);
+    }
+
+    public static void SendClient(Socket client, CommunicationBetween.Personne personne)
+    {
+        byte[] msg = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(personne));
+        client.Send(msg);
+    }
+
+    public static void ReceptionPersonne(Socket socket)
+    {
+        byte[] buffer = new byte[1024];
+        int length = socket.Receive(buffer);
+        string resp = Encoding.ASCII.GetString(buffer, 0, length);
+
+        CommunicationBetween.Personne? clientConnect = JsonConvert.DeserializeObject<CommunicationBetween.Personne>(resp);
+        if (clientConnect != null)
+        {
+            Random aleatoire = new Random();
+            int entier = aleatoire.Next(1, 9999);
+
+            int id = entier * 1024;
+            clientConnect.id = id;
+            people.Add(id, clientConnect);
+            Console.WriteLine("Le client : " + clientConnect.name + " a envoyé ses informations avec succès");
+        }
+        else
+        {
+            Console.WriteLine("Le client n'a pas envoyé ses informations");
+        }
+    }
+
+    public static string Get(Socket socket)
+    {
+        byte[] buffer = new byte[1024];
+        int length = socket.Receive(buffer);
+        string resp = Encoding.ASCII.GetString(buffer, 0, length);
+        return resp;
+    }
+
+    public static void SaveDictionary(string json)
+    {
+        string path = @"Ressources\people.json";
+        path = Path.GetFullPath(path).Replace(@"\bin\Debug\net6.0", "");        
+
+        using StreamWriter file = File.CreateText(path);
+        
+        JsonSerializer serializer = new();
+        serializer.Serialize(file, json);
+        
+    }
+
+    public static void LoadJsonFile()
+    {
+        string path = @"Ressources\people.json";
+        path = Path.GetFullPath(path).Replace(@"\bin\Debug\net6.0", "");
+
+        string jsonFile = File.ReadAllText(path);
+        string jsonConvert = JsonConvert.DeserializeObject<string>(jsonFile);
+        if (jsonFile != null && jsonFile != "")
+            people = JsonConvert.DeserializeObject<Dictionary<int, CommunicationBetween.Personne>>(jsonConvert);
+    }
+    
     public static int Main(String[] args)
     {
         Start();
